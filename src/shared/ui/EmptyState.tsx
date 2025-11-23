@@ -11,6 +11,25 @@ interface EmptyStateProps {
   description?: string;
 }
 
+/**
+ * 빈 상태를 표시하는 컴포넌트
+ *
+ * @param title - 제목
+ * @param description - 설명 (선택사항)
+ *
+ * @example
+ * // 제목만 표시
+ * <EmptyState title="데이터가 없습니다" />
+ *
+ * @example
+ * // 제목과 설명 함께 표시
+ * <EmptyState
+ *   title="검색 결과가 없습니다"
+ *   description="조건을 변경하여 다시 시도해보세요"
+ * />
+ *
+ * @returns 빈 상태를 표시하는 컴포넌트
+ */
 export function EmptyState({ title, description }: EmptyStateProps) {
   return (
     <div
