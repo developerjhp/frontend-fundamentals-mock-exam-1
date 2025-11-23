@@ -1,13 +1,17 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import { GlobalPortal, GlobalStyles } from 'tosslib';
 import { Routes } from './pages/Routes';
+import { queryClient } from './lib/queryClient';
 
 export function App() {
   return (
     <>
       <GlobalStyles />
-      <GlobalPortal.Provider>
-        <Routes />
-      </GlobalPortal.Provider>
+      <QueryClientProvider client={queryClient}>
+        <GlobalPortal.Provider>
+          <Routes />
+        </GlobalPortal.Provider>
+      </QueryClientProvider>
     </>
   );
 }
