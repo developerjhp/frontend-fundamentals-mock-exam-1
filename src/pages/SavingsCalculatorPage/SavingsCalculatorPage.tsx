@@ -1,20 +1,21 @@
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Border, NavigationBar, Spacing, Tab } from 'tosslib';
+import { Border, NavigationBar, Spacing } from 'tosslib';
 
 import { SavingsForm } from '@widgets/savings-form/ui/SavingsForm';
 import { savingsFormSchema, type SavingsFormData } from '@widgets/savings-form/model/schema';
 import { ErrorBoundary } from '@shared/ui/ErrorBoundary';
-import { TabContent } from '@pages/SavingsCalculatorPage/ui/TabContent';
+import { Tabs } from '@shared/ui/Tabs';
+import { ProductsTab } from './ProductsTab';
+import { ResultsTab } from './ResultsTab';
 import { AVAILABLE_TERMS } from '@/widgets/savings-form/model/constants';
-
-type TabValue = 'products' | 'results';
+import type { SavingsProduct } from '@/entities/savings-product/model/types';
 
 export function SavingsCalculatorPage() {
-  const [currentTab, setCurrentTab] = useState<TabValue>('products');
-  const handleTabChange = (value: string) => {
-    setCurrentTab(value as TabValue);
+  const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);
+  const handleProductSelect = (product: SavingsProduct) => {
+    setSelectedProduct(product);
   };
 
   const {
@@ -44,19 +45,29 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab onChange={handleTabChange}>
-        <Tab.Item value="products" selected={currentTab === 'products'}>
-          적금 상품
-        </Tab.Item>
-        <Tab.Item value="results" selected={currentTab === 'results'}>
-          계산 결과
-        </Tab.Item>
-      </Tab>
-
       <ErrorBoundary>
-        <Suspense fallback={<div style={{ padding: '16px', textAlign: 'center' }}>상품 목록 로딩 중...</div>}>
-          <TabContent currentTab={currentTab} formValues={formValues} />
-        </Suspense>
+        <Tabs
+          tabs={[
+            { value: 'products' as const, label: '적금 상품' },
+            { value: 'results' as const, label: '계산 결과' },
+          ]}
+          content={{
+            products: (
+              <ProductsTab
+                formValues={formValues}
+                selectedProduct={selectedProduct}
+                onProductSelect={handleProductSelect}
+              />
+            ),
+            results: (
+              <ResultsTab
+                formValues={formValues}
+                selectedProduct={selectedProduct}
+                onProductSelect={handleProductSelect}
+              />
+            ),
+          }}
+        />
       </ErrorBoundary>
     </>
   );
