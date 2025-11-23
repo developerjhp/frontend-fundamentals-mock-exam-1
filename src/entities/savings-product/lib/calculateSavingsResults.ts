@@ -45,12 +45,12 @@ export function calculateSavingsResults(input: SavingsCalculationInput): Savings
   const { product, targetAmount, monthlyAmount, savingTerm } = input;
 
   const expectedAmount = calculateExpectedAmount(monthlyAmount, savingTerm, product.annualRate);
-  const difference = targetAmount - expectedAmount;
+  const difference = Math.floor(targetAmount - expectedAmount);
   const recommendedMonthlyAmount = calculateRecommendedMonthlyAmount(targetAmount, savingTerm, product.annualRate);
 
   return {
-    expectedAmount: Math.floor(expectedAmount),
-    difference: Math.floor(difference),
+    expectedAmount,
+    difference,
     recommendedMonthlyAmount,
   };
 }
@@ -78,7 +78,7 @@ function calculateAnnualInterestRate(annualRate: number): number {
  * calculateExpectedAmount(1000000, 12, 2.0); // 1400000
  */
 function calculateExpectedAmount(monthlyAmount: number, savingTerm: number, annualRate: number): number {
-  return monthlyAmount * savingTerm * calculateAnnualInterestRate(annualRate);
+  return Math.floor(monthlyAmount * savingTerm * calculateAnnualInterestRate(annualRate));
 }
 
 /**
