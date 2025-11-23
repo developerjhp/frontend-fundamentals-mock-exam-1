@@ -1,7 +1,13 @@
 import type { SavingsProduct } from '@entities/savings-product/model/types';
 
 interface FilterCriteria {
+  /**
+   * 사용자 입력 월 납입액
+   */
   monthlyAmount?: number;
+  /**
+   * 사용자 입력 저축 기간
+   */
   savingTerm?: number;
 }
 
@@ -20,7 +26,7 @@ interface FilterCriteria {
 export function filterProductsByCriteria(products: SavingsProduct[], criteria: FilterCriteria) {
   const { monthlyAmount, savingTerm } = criteria;
 
-  if (monthlyAmount === undefined || savingTerm === undefined) {
+  if (monthlyAmount === undefined || monthlyAmount === 0 || savingTerm === undefined) {
     return products;
   }
 

@@ -1,15 +1,36 @@
 import type { SavingsProduct } from '@entities/savings-product/model/types';
 
 interface SavingsCalculationInput {
+  /**
+   * 적금 상품 정보
+   */
   product: SavingsProduct;
+  /**
+   * 사용자 입력 목표 금액
+   */
   targetAmount: number;
+  /**
+   * 사용자 입력 월 납입액
+   */
   monthlyAmount: number;
+  /**
+   * 사용자 입력 저축 기간
+   */
   savingTerm: number;
 }
 
-export interface SavingsCalculationResult {
+interface SavingsCalculationResult {
+  /**
+   * 예상 수익 금액
+   */
   expectedAmount: number;
+  /**
+   * 목표 금액과의 차이
+   */
   difference: number;
+  /**
+   * 추천 월 납입 금액
+   */
   recommendedMonthlyAmount: number;
 }
 
