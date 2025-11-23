@@ -1,6 +1,6 @@
-import { ProductItem } from '@entities/savings-product/ui/ProductItem';
+import { ProductItem } from '@/pages/SavingsCalculatorPage/components/ui/ProductItem';
 import { EmptyState } from '@shared/ui/EmptyState';
-import type { SavingsProduct } from '@entities/savings-product/model/types';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 
 interface ProductListProps {
   /**

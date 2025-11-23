@@ -1,4 +1,4 @@
-import type { SavingsProduct } from '@entities/savings-product/model/types';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 
 /**
  * 연 이자율이 가장 높은 상위 N개의 적금 상품을 반환합니다.

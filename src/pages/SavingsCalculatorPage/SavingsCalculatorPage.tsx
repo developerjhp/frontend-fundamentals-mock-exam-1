@@ -3,14 +3,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Border, NavigationBar, Spacing } from 'tosslib';
 
-import { SavingsForm } from '@widgets/savings-form/ui/SavingsForm';
-import { savingsFormSchema, type SavingsFormData } from '@widgets/savings-form/model/schema';
+import { SavingsForm } from '@/pages/SavingsCalculatorPage/components/ui/SavingsForm';
+import { savingsFormSchema, type SavingsFormData, type SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
+import { AVAILABLE_TERMS } from '@/pages/SavingsCalculatorPage/constants';
 import { ErrorBoundary } from '@shared/ui/ErrorBoundary';
 import { Tabs } from '@shared/ui/Tabs';
-import { ProductsTab } from './ProductsTab';
-import { ResultsTab } from './ResultsTab';
-import { AVAILABLE_TERMS } from '@/widgets/savings-form/model/constants';
-import type { SavingsProduct } from '@/entities/savings-product/model/types';
+import { ProductsTab } from '@/pages/SavingsCalculatorPage/components/container/ProductsTab';
+import { ResultsTab } from '@/pages/SavingsCalculatorPage/components/container/ResultsTab/ResultsTab';
 
 export function SavingsCalculatorPage() {
   const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);

@@ -1,5 +1,5 @@
 import { http } from 'tosslib';
-import type { SavingsProduct } from '@entities/savings-product/model/types';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 
 // 개발 환경에서만 delay 추가 (Suspense 테스트용)
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

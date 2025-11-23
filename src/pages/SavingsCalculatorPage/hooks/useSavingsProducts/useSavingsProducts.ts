@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { fetchSavingsProducts } from '@entities/savings-product/api/savingsProductApi';
+import { fetchSavingsProducts } from '@/pages/SavingsCalculatorPage/hooks/useSavingsProducts/savingsProductApi';
 
 /**
  * 적금 상품 목록 조회

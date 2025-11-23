@@ -1,4 +1,4 @@
-import type { SavingsProduct } from '@entities/savings-product/model/types';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 
 interface SavingsCalculationInput {
   /**

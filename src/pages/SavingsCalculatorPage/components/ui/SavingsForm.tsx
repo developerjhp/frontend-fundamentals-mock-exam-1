@@ -4,8 +4,8 @@ import { SelectBottomSheet, Spacing } from 'tosslib';
 import { format } from '@shared/utils/format';
 import { parseNumberFromInput } from '@shared/utils/parseNumberFromInput';
 import { TextFieldWithError } from '@shared/ui/TextFieldWithError';
-import type { SavingsFormData } from '@widgets/savings-form/model/schema';
-import { AVAILABLE_TERMS, SavingTerm } from '@widgets/savings-form/model/constants';
+import type { SavingsFormData } from '@/pages/SavingsCalculatorPage/types';
+import { AVAILABLE_TERMS, SavingTerm } from '@/pages/SavingsCalculatorPage/constants';
 
 interface SavingsFormProps {
   /**

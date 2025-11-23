@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Feature-Sliced Design** 아키텍처를 기반으로 확장 가능하고 유지보수하기 쉬운 구조로 설계했으며, **React Query + Suspense**, **React Hook Form + Zod**를 활용하여 선언적인 상태 관리 시스템을 구축했습니다.
+**페이지 중심 구조**로 설계하여 모바일 앱 특성에 맞게 응집도 높은 코드베이스를 구축했으며, **React Query + Suspense**, **React Hook Form + Zod**를 활용하여 선언적인 상태 관리 시스템을 구축했습니다.
 
 <details>
 <summary><strong>실행 방법</strong></summary>
@@ -41,63 +41,50 @@ src/
 │   ├── App.tsx
 │   └── Routes.tsx
 │
-├── pages/                        # 페이지 계층
+├── pages/                                  # 페이지별 독립적인 구조
 │   └── SavingsCalculatorPage/
-│       ├── SavingsCalculatorPage.tsx  # 메인 페이지 (폼 + 탭 관리)
-│       ├── ProductsTab.tsx            # 적금 상품 목록 탭
-│       └── ResultsTab.tsx             # 계산 결과 탭
-│
-├── widgets/                      # 비즈니스 기능 단위
-│   ├── savings-form/             # 저축 목표 입력 폼
-│   │   ├── model/
-│   │   │   ├── schema.ts
-│   │   │   └── constants.ts
-│   │   └── ui/
-│   │       └── SavingsForm.tsx
-│   │
-│   ├── product-list/             # 적금 상품 목록
-│   │   └── ui/
-│   │       └── ProductList.tsx
-│   │
-│   ├── calculation-result/       # 계산 결과 표시
-│   │   └── ui/
-│   │       └── CalculationResult.tsx
-│   │
-│   └── recommended-products/     # 추천 상품 섹션
-│       └── ui/
-│           └── RecommendedProducts.tsx
-│
-├── entities/                     # 비즈니스 엔티티
-│   └── savings-product/          # 적금 상품 도메인
-│       ├── api/                  # 서버 상태 관리
-│       │   ├── savingsProductApi.ts
-│       │   └── useSavingsProductsQuery.ts
+│       ├── SavingsCalculatorPage.tsx      # 메인 페이지 (폼 + 탭 관리)
+│       ├── ProductsTab.tsx                # 적금 상품 목록 탭
+│       ├── types.ts                       # 페이지 전용 타입
 │       │
-│       ├── lib/                  # 비즈니스 로직 (순수 함수)
-│       │   ├── calculateSavingsResults.ts
-│       │   ├── filterProductsByCriteria.ts
-│       │   └── getTopProductsByAnnualRate.ts
+│       ├── ResultsTab/                    # 계산 결과 탭
+│       │   ├── ResultsTab.tsx
+│       │   ├── calculateSavingsResults.ts    # ResultsTab 전용
+│       │   └── getTopProductsByAnnualRate.ts # ResultsTab 전용
 │       │
-│       ├── model/                # 타입 정의
-│       │   └── types.ts
+│       ├── components/                    # 페이지 전용 컴포넌트
+│       │   ├── SavingsForm/              # 저축 목표 입력 폼
+│       │   │   ├── SavingsForm.tsx
+│       │   │   ├── schema.ts             # Zod 스키마
+│       │   │   └── constants.ts          # 저축 기간 상수
+│       │   ├── ProductList.tsx           # 적금 상품 목록
+│       │   ├── ProductItem.tsx           # 적금 상품 아이템
+│       │   ├── CalculationResult.tsx     # 계산 결과 표시
+│       │   └── RecommendedProducts.tsx   # 추천 상품 섹션
 │       │
-│       └── ui/                   # 엔티티 UI 컴포넌트
-│           └── ProductItem.tsx
+│       ├── hooks/                         # 페이지 전용 훅
+│       │   ├── useSavingsProducts.ts
+│       │   └── useFilteredProducts/
+│       │       ├── useFilteredProducts.ts
+│       │       └── filterProductsByCriteria.ts  # 훅 전용 유틸
+│       │
+│       └── lib/                           # 공통 로직
+│           └── savingsProductApi.ts
 │
-└── shared/                       # 공통 레이어
-    ├── lib/                      # 공통 라이브러리
+└── shared/                                 # 진짜 공통 코드만
+    ├── lib/                               # 공통 라이브러리
     │   └── react-query/
-    │       └── queryClient.ts    # React Query 설정
+    │       └── queryClient.ts
     │
-    ├── ui/                       # 재사용 가능한 UI 컴포넌트
+    ├── ui/                                # 재사용 가능한 UI 컴포넌트
     │   ├── Tabs.tsx
     │   ├── ErrorBoundary.tsx
     │   ├── EmptyState.tsx
     │   └── TextFieldWithError.tsx
     │
-    └── utils/                    # 유틸리티 함수
-        ├── format.ts             # 금액 포맷팅
-        └── parseNumberFromInput.ts # 숫자 파싱
+    └── utils/                             # 유틸리티 함수
+        ├── format.ts
+        └── parseNumberFromInput.ts
 ```
 
 </details>
@@ -105,82 +92,48 @@ src/
 <details>
 <summary><strong> 코드 둘러보기</strong> (처음 보시는 분들을 위한 탐색 가이드)</summary>
 
-### 1단계: 설정 파일 확인
+### 1단계: 공통 레이어 (`src/shared`)
 
-전체 구조 파악을 위해 설정 파일부터 보는 걸 추천합니다.
+재사용 가능한 코드들을 먼저 확인하세요.
 
-- `package.json` → 어떤 라이브러리를 사용했는지
-- `tsconfig.json` → 경로 별칭(`@app`, `@entities` 등) 설정
-- `vite.config.mts` → 빌드 설정
+- `ui/` → Tabs, ErrorBoundary, EmptyState 등 공통 컴포넌트
+- `utils/` → format, parseNumberFromInput 등 유틸리티
 
-### 2단계: 공통 레이어부터
+### 2단계: 페이지 구조 (`src/pages/SavingsCalculatorPage`)
 
-재사용 컴포넌트들을 먼저 보면 전체적인 코드 스타일을 파악하기 쉽습니다.
+페이지 안에 모든 것이 모여있습니다.
 
-**UI 컴포넌트** (`src/shared/ui/`)
+- `types.ts` → 타입 정의
+- `hooks/` → 커스텀 훅
+- `lib/` → API 호출, 계산 로직, 필터링 등 비즈니스 로직
+- `components/` → 페이지 전용 컴포넌트들
+- `*.tsx` → 페이지 파일 (메인, 탭들)
 
-- `EmptyState.tsx`, `TextFieldWithError.tsx` → 간단한 컴포넌트들
-- `ErrorBoundary.tsx` → 에러 처리
-- `Tabs.tsx` → 탭상태를 선언적으로 관리할 수 있는 컴포넌트
+### 3단계: 핵심 패턴 이해
 
-**유틸** (`src/shared/utils/`)
-
-- `format.ts` → 금액 포맷팅 (1000000 → "1,000,000")
-- `parseNumberFromInput.ts` → 입력값에서 숫자제거 후 파싱
-
-### 3단계: 비즈니스 로직
-
-적금 계산의 핵심입니다. UI와 완전히 분리되어 있어서 테스트하기 좋게 만들었습니다.
-
-**계산 로직** (`src/entities/savings-product/lib/`)
-
-- `calculateSavingsResults.ts` → 예상 수익, 추천 납입액 계산
-- `filterProductsByCriteria.ts` → 조건 필터링
-- `getTopProductsByAnnualRate.ts` → 이자율 정렬
-
-**API** (`src/entities/savings-product/api/`)
-
-- `savingsProductApi.ts` → HTTP 호출
-- `useSavingsProductsQuery.ts` → React Query의 useSuspenseQuery 활용
-
-### 4단계: 폼 구현
-
-Zod와 React Hook Form을 어떻게 통합했는지 확인할 수 있습니다.
-
-**스키마** (`src/widgets/savings-form/model/`)
-
-- `schema.ts` → Zod로 검증 규칙 정의
-- `constants.ts` → 저축 기간 옵션
-
-**폼 UI** (`src/widgets/savings-form/ui/`)
-
-- `SavingsForm.tsx` → 숫자 포맷팅 처리 방식 참고
-
-### 5단계: 페이지 조립
-
-모든 조각을 어떻게 조립했는지 확인합니다.
-
-- `SavingsCalculatorPage.tsx` → 폼 상태 관리와 탭 제어
-- `ProductsTab.tsx`, `ResultsTab.tsx` → Suspense로 감싼 탭 내용
+- `lib/calculateSavingsResults.ts` → UI와 분리된 순수 함수
+- `components/schema.ts` → Zod로 타입과 검증을 동시에
+- `hooks/useSavingsProducts.ts` → React Query Suspense 모드
+- `SavingsCalculatorPage.tsx` → React Hook Form 통합
 
 ### 시간 없으시면 이것만
 
 핵심 파일 5개만 봐도 설계 의도를 파악할 수 있습니다.
 
-1. `calculateSavingsResults.ts` - 순수 함수로 분리한 비즈니스 로직
-2. `Tabs.tsx` - 제네릭으로 만든 재사용 컴포넌트
-3. `schema.ts` - Zod로 타입과 검증을 한 번에
+1. `lib/calculateSavingsResults.ts` - 순수 함수로 분리한 비즈니스 로직
+2. `shared/ui/Tabs.tsx` - 제네릭으로 만든 재사용 컴포넌트
+3. `components/schema.ts` - Zod로 타입과 검증을 한 번에
 4. `SavingsCalculatorPage.tsx` - React Hook Form + Suspense 통합
-5. `useSavingsProductsQuery.ts` - React Query Suspense 모드
+5. `hooks/useSavingsProducts.ts` - React Query Suspense 모드
 
 </details>
 
 <details>
 <summary><strong>설계 시 고려한 점</strong></summary>
 
-### Feature-Sliced Design 도입
+### 페이지 중심 구조 선택
 
-확장성과 유지보수성을 위해 계층별로 코드를 분리했습니다. 새로운 기능을 추가하거나 수정할 때 다른 계층에 영향을 주지 않습니다.
+모바일 앱 특성상 대부분의 컴포넌트가 특정 페이지에서만 사용되므로, 페이지별로 코드를 묶어 응집도를 높였습니다. 페이지를 삭제할 때 폴더만 지우면 되고, 관련 코드를 찾을 때도 한 곳만 보면 됩니다.
 
 ### 비즈니스 로직 분리
 
@@ -207,22 +160,22 @@ React Query의 Suspense 모드와 ErrorBoundary를 활용해 로딩/에러 상�
 
 ### 높은 응집도: 관련된 것들끼리 모여있는가?
 
-**같은 관심사는 같은 곳에** 모아두려고 했습니다.
+**페이지 단위로 모든 것이 모여있습니다.**
 
-- `savings-product` 엔티티 안에 API 호출(`useSavingsProductsQuery`), 계산 로직(`calculateSavingsResults`), 타입 정의(`types.ts`)가 모두 모여있습니다.
-- 적금 상품과 관련된 모든 것이 한 곳에 있으니, 상품 관련 수정이 필요할 때 여기저기 찾아다닐 필요가 없습니다.
+- `SavingsCalculatorPage` 폴더 안에 API 호출, 계산 로직, 컴포넌트, 타입이 모두 있습니다.
+- 적금 계산기 관련 수정이 필요할 때 이 폴더만 보면 됩니다.
 
-**위젯도 자신의 관심사에만 집중**합니다.
+**재사용되는 것만 shared로**
 
-- `savings-form`은 폼 스키마(`schema.ts`), 상수(`constants.ts`), UI(`SavingsForm.tsx`)만 가지고 있습니다.
-- 계산 로직은 `entities`에 있으니, 폼은 "사용자 입력을 받는 것"에만 집중할 수 있습니다.
+- 2개 이상의 페이지에서 쓰이는 것만 `shared`에 둡니다.
+- 나중에 필요해지면 그때 옮겨도 됩니다 (YAGNI 원칙).
 
 ### 낮은 결합도: 서로 독립적으로 변경할 수 있는가?
 
 **비즈니스 로직을 UI에서 완전히 분리**했습니다.
 
 ```typescript
-// entities/savings-product/lib/calculateSavingsResults.ts
+// pages/SavingsCalculatorPage/lib/calculateSavingsResults.ts
 export function calculateSavingsResults(input: SavingsCalculationInput) {
   // React 없이도 동작하는 순수 함수
 }
@@ -231,18 +184,14 @@ export function calculateSavingsResults(input: SavingsCalculationInput) {
 - 계산 로직은 React를 전혀 모릅니다. UI 프레임워크를 바꿔도 이 로직은 그대로 쓸 수 있습니다.
 - 테스트할 때도 컴포넌트를 렌더링할 필요 없이 함수만 호출하면 됩니다.
 
-**계층 간 단방향 의존성**을 유지했습니다.
+**페이지는 독립적**입니다.
 
-```
-pages → widgets → entities → shared
-```
-
-- `pages`는 `widgets`을 알지만, `widgets`은 `pages`를 모릅니다.
-- `ProductList` 위젯을 다른 페이지에서도 재사용할 수 있습니다.
+- 각 페이지는 `shared`만 의존하고, 다른 페이지를 몰라도 됩니다.
+- 페이지를 통째로 삭제하거나 추가해도 다른 페이지에 영향 없습니다.
 
 ### 적절한 추상화 수준: 각 계층이 자신의 레벨에 맞는 고민을 하는가?
 
-**페이지 레벨**: "어떤 위젯을 조합할까?"
+**페이지 레벨**: "전체 흐름을 어떻게 구성할까?"
 
 ```tsx
 // SavingsCalculatorPage.tsx
@@ -254,36 +203,27 @@ pages → widgets → entities → shared
     { value: 'results', label: '계산 결과' }
   ]}
   content={{
-    products: <ProductsTab formValues={formValues} selectedProduct={selectedProduct} />,
-    results: <ResultsTab formValues={formValues} selectedProduct={selectedProduct} />
+    products: <ProductsTab ... />,
+    results: <ResultsTab ... />
   }}
 />
 ```
 
-페이지는 위젯을 배치하고 데이터를 전달하는 것에만 집중합니다. 계산이나 필터링 로직은 몰라도 됩니다.
+페이지는 컴포넌트를 배치하고 데이터 흐름을 제어합니다.
 
-**위젯 레벨**: "어떤 데이터를 어떻게 보여줄까?"
+**컴포넌트 레벨**: "어떤 데이터를 어떻게 보여줄까?"
 
 ```tsx
-// ResultsTab.tsx
-const calculationResults = selectedProduct
-  ? calculateSavingsResults({
-      product: selectedProduct,
-      targetAmount: formValues.targetAmount,
-      monthlyAmount: formValues.monthlyAmount,
-      savingTerm: formValues.savingTerm,
-    })
-  : null;
-
-return <CalculationResult results={calculationResults} />;
+// components/CalculationResult.tsx
+<ListRow contents={<ListRow.Texts top="예상 수익 금액" bottom={...} />} />
 ```
 
-위젯은 엔티티의 함수를 호출하고 결과를 렌더링합니다. 계산 로직의 내부 구현은 몰라도 됩니다.
+컴포넌트는 받은 데이터를 UI로 표현합니다.
 
-**엔티티 레벨**: "도메인 로직을 어떻게 구현할까?"
+**lib 레벨**: "로직을 어떻게 구현할까?"
 
 ```typescript
-// calculateSavingsResults.ts
+// lib/calculateSavingsResults.ts
 function calculateExpectedAmount(monthlyAmount, savingTerm, annualRate) {
   return Math.floor(monthlyAmount * savingTerm * calculateAnnualInterestRate(annualRate));
 }

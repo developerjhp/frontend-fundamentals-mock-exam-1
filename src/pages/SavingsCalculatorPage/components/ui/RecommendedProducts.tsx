@@ -1,6 +1,6 @@
 import { Border, ListHeader, Spacing } from 'tosslib';
-import { ProductList } from '@/widgets/product-list/ui/ProductList';
-import type { SavingsProduct } from '@/entities/savings-product/model/types';
+import { ProductList } from '@/pages/SavingsCalculatorPage/components/ui/ProductList';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 
 interface RecommendedProductsProps {
   /**

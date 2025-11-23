@@ -1,5 +1,5 @@
 import { Assets, colors, ListRow } from 'tosslib';
-import type { SavingsProduct } from '@entities/savings-product/model/types';
+import type { SavingsProduct } from '@/pages/SavingsCalculatorPage/types';
 import { format } from '@shared/utils/format';
 
 const STYLES = {

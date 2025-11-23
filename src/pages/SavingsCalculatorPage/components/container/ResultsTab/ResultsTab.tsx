@@ -1,13 +1,11 @@
-import { useSavingsProducts } from '@entities/savings-product/api/useSavingsProductsQuery';
-import { filterProductsByCriteria } from '@entities/savings-product/lib/filterProductsByCriteria';
-import type { SavingsProduct } from '@/entities/savings-product/model/types';
-import type { SavingsFormData } from '@widgets/savings-form/model/schema';
+import { useFilteredProducts } from '@/pages/SavingsCalculatorPage/hooks/useFilteredProducts/useFilteredProducts';
+import type { SavingsProduct, SavingsFormData } from '@/pages/SavingsCalculatorPage/types';
 import { Suspense } from 'react';
-import { EmptyState } from '@/shared/ui/EmptyState';
-import { CalculationResult } from '@/widgets/calculation-result/ui/CalculationResult';
-import { calculateSavingsResults } from '@/entities/savings-product/lib/calculateSavingsResults';
-import { getTopProductsByAnnualRate } from '@/entities/savings-product/lib/getTopProductsByAnnualRate';
-import { RecommendedProducts } from '@/widgets/recommended-products/ui/RecommendedProducts';
+import { EmptyState } from '@shared/ui/EmptyState';
+import { CalculationResult } from '@/pages/SavingsCalculatorPage/components/ui/CalculationResult';
+import { calculateSavingsResults } from '@/pages/SavingsCalculatorPage/components/container/ResultsTab/calculateSavingsResults';
+import { getTopProductsByAnnualRate } from '@/pages/SavingsCalculatorPage/components/container/ResultsTab/getTopProductsByAnnualRate';
+import { RecommendedProducts } from '@/pages/SavingsCalculatorPage/components/ui/RecommendedProducts';
 
 interface ResultsTabContentProps {
   formValues: SavingsFormData;
@@ -24,12 +22,6 @@ export function ResultsTab({ formValues, selectedProduct, onProductSelect }: Res
 }
 
 function ResultsTabContent({ formValues, selectedProduct, onProductSelect }: ResultsTabContentProps) {
-  const { data: products } = useSavingsProducts();
-  const filteredProducts = filterProductsByCriteria(products, {
-    monthlyAmount: formValues.monthlyAmount,
-    savingTerm: formValues.savingTerm,
-  });
-
   const calculationResults = selectedProduct
     ? calculateSavingsResults({
         product: selectedProduct,
@@ -38,6 +30,8 @@ function ResultsTabContent({ formValues, selectedProduct, onProductSelect }: Res
         savingTerm: formValues.savingTerm,
       })
     : null;
+
+  const { products, filteredProducts } = useFilteredProducts(formValues);
   const recommendedProducts = getTopProductsByAnnualRate(filteredProducts.length > 0 ? filteredProducts : products);
 
   return (
