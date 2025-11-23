@@ -9,8 +9,17 @@ const STYLES = {
 } as const;
 
 interface ProductItemProps {
+  /**
+   * 적금 상품
+   */
   product: SavingsProduct;
+  /**
+   * 선택 여부
+   */
   isSelected?: boolean;
+  /**
+   * 클릭 핸들러
+   */
   onClick?: () => void;
 }
 
