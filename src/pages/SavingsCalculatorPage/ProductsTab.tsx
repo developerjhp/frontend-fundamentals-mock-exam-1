@@ -20,7 +20,7 @@ export function ProductsTab({ formValues, selectedProduct, onProductSelect }: Pr
   );
 }
 
-export function ProductsTabContent({ formValues, selectedProduct, onProductSelect }: ProductsTabProps) {
+function ProductsTabContent({ formValues, selectedProduct, onProductSelect }: ProductsTabProps) {
   const { data: products } = useSavingsProducts();
   const filteredProducts = filterProductsByCriteria(products, {
     monthlyAmount: formValues.monthlyAmount,
