@@ -1,7 +1,7 @@
-import { Border, colors, ListHeader, ListRow, Spacing } from 'tosslib';
+import { colors, ListRow, Spacing } from 'tosslib';
 import type { SavingsProduct } from '@entities/savings-product/model/types';
-import { ProductItem } from '@entities/savings-product/ui/ProductItem';
 import { format } from '@shared/utils/format';
+import { ReactNode } from 'react';
 
 interface CalculationResultProps {
   /**
@@ -17,21 +17,12 @@ interface CalculationResultProps {
     recommendedMonthlyAmount: number;
   } | null;
   /**
-   * 추천 상품 목록
+   * 추가 콘텐츠 (추천 상품 등)
    */
-  recommendedProducts: SavingsProduct[];
-  /**
-   * 적금 상품 선택 핸들러
-   */
-  onProductSelect: (product: SavingsProduct) => void;
+  children?: ReactNode;
 }
 
-export function CalculationResult({
-  selectedProduct,
-  calculationResults,
-  recommendedProducts,
-  onProductSelect,
-}: CalculationResultProps) {
+export function CalculationResult({ selectedProduct, calculationResults, children }: CalculationResultProps) {
   if (selectedProduct == null) {
     return <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />;
   }
@@ -76,21 +67,7 @@ export function CalculationResult({
         }
       />
 
-      <Spacing size={8} />
-      <Border height={16} />
-      <Spacing size={8} />
-
-      <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
-      <Spacing size={12} />
-
-      {recommendedProducts.map(product => (
-        <ProductItem
-          key={product.id}
-          product={product}
-          isSelected={selectedProduct?.id === product.id}
-          onClick={() => onProductSelect(product)}
-        />
-      ))}
+      {children}
 
       <Spacing size={40} />
     </>
