@@ -7,8 +7,7 @@ import { EmptyState } from '@/shared/ui/EmptyState';
 import { CalculationResult } from '@/widgets/calculation-result/ui/CalculationResult';
 import { calculateSavingsResults } from '@/entities/savings-product/lib/calculateSavingsResults';
 import { getTopProductsByAnnualRate } from '@/entities/savings-product/lib/getTopProductsByAnnualRate';
-import { ProductList } from '@/widgets/product-list/ui/ProductList';
-import { Border, ListHeader, Spacing } from 'tosslib';
+import { RecommendedProducts } from '@/widgets/recommended-products/ui/RecommendedProducts';
 
 interface ResultsTabContentProps {
   formValues: SavingsFormData;
@@ -42,15 +41,13 @@ function ResultsTabContent({ formValues, selectedProduct, onProductSelect }: Res
   const recommendedProducts = getTopProductsByAnnualRate(filteredProducts.length > 0 ? filteredProducts : products);
 
   return (
-    <CalculationResult selectedProduct={selectedProduct} calculationResults={calculationResults}>
-      <Spacing size={8} />
-      <Border height={16} />
-      <Spacing size={8} />
-
-      <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
-      <Spacing size={12} />
-
-      <ProductList products={recommendedProducts} selectedProduct={selectedProduct} onProductSelect={onProductSelect} />
-    </CalculationResult>
+    <>
+      <CalculationResult selectedProduct={selectedProduct} calculationResults={calculationResults} />
+      <RecommendedProducts
+        products={recommendedProducts}
+        selectedProduct={selectedProduct}
+        onProductSelect={onProductSelect}
+      />
+    </>
   );
 }

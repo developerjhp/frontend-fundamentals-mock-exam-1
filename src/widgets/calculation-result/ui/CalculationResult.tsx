@@ -1,7 +1,6 @@
 import { colors, ListRow, Spacing } from 'tosslib';
 import type { SavingsProduct } from '@entities/savings-product/model/types';
 import { format } from '@shared/utils/format';
-import { ReactNode } from 'react';
 
 interface CalculationResultProps {
   /**
@@ -16,13 +15,9 @@ interface CalculationResultProps {
     difference: number;
     recommendedMonthlyAmount: number;
   } | null;
-  /**
-   * 추가 콘텐츠 (추천 상품 등)
-   */
-  children?: ReactNode;
 }
 
-export function CalculationResult({ selectedProduct, calculationResults, children }: CalculationResultProps) {
+export function CalculationResult({ selectedProduct, calculationResults }: CalculationResultProps) {
   if (selectedProduct == null) {
     return <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />;
   }
@@ -66,8 +61,6 @@ export function CalculationResult({ selectedProduct, calculationResults, childre
           />
         }
       />
-
-      {children}
 
       <Spacing size={40} />
     </>

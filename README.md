@@ -59,9 +59,13 @@ src/
 │   │   └── ui/
 │   │       └── ProductList.tsx
 │   │
-│   └── calculation-result/       # 계산 결과 표시
+│   ├── calculation-result/       # 계산 결과 표시
+│   │   └── ui/
+│   │       └── CalculationResult.tsx
+│   │
+│   └── recommended-products/     # 추천 상품 섹션
 │       └── ui/
-│           └── CalculationResult.tsx
+│           └── RecommendedProducts.tsx
 │
 ├── entities/                     # 비즈니스 엔티티
 │   └── savings-product/          # 적금 상품 도메인
