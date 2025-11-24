@@ -62,15 +62,13 @@ src/
 │       │       ├── CalculationResult.tsx # 계산 결과 표시
 │       │       └── RecommendedProducts.tsx  # 추천 상품 섹션
 │       │
-│       ├── hooks/                        # 커스텀 훅
-│       │   ├── useSavingsProducts.ts     # 적금 상품 조회 (React Query)
-│       │   └── useFilteredProducts/      # 상품 필터링 로직
-│       │       ├── useFilteredProducts.ts
-│       │       └── filterProductsByCriteria.ts
-│       │
-│       └── lib/                          # 비즈니스 로직
-│           ├── savingsProductApi.ts      # API 호출 함수
-│           └── calculateSavingsResults.ts  # 계산 로직 (순수 함수)
+│       └── hooks/                        # 커스텀 훅
+│           ├── useSavingsProducts/       # 적금 상품 조회
+│           │   ├── useSavingsProducts.ts # React Query 훅
+│           │   └── savingsProductApi.ts  # API 호출 함수
+│           └── useFilteredProducts/      # 상품 필터링
+│               ├── useFilteredProducts.ts
+│               └── filterProductsByCriteria.ts
 │
 └── shared/                                # 진짜 공통 코드만
     ├── lib/                               # 공통 라이브러리 설정
@@ -106,8 +104,7 @@ src/
 
 - `types.ts` → 타입 정의
 - `constants.ts` → 상수 정의
-- `hooks/` → 커스텀 훅 (React Query, 필터링 로직)
-- `lib/` → 비즈니스 로직 (API, 계산 함수)
+- `hooks/` → 커스텀 훅 (React Query, API 호출, 필터링 로직)
 - `components/container/` → 비즈니스 로직을 포함하는 컨테이너 컴포넌트
 - `components/ui/` → 프레젠테이션 컴포넌트 (순수 UI)
 - `SavingsCalculatorPage.tsx` → 메인 페이지
@@ -115,7 +112,7 @@ src/
 ### 3단계: 핵심 패턴 이해
 
 - `components/container/ResultsTab/calculateSavingsResults.ts` → UI와 분리된 순수 함수
-- `hooks/useSavingsProducts.ts` → React Query Suspense 모드
+- `hooks/useSavingsProducts/useSavingsProducts.ts` → React Query Suspense 모드
 - `components/ui/` → 프레젠테이션 컴포넌트 (props만 받아서 렌더링)
 - `components/container/` → 컨테이너 컴포넌트 (로직 + UI 조합)
 
@@ -127,7 +124,7 @@ src/
 2. `shared/ui/Tabs.tsx` - 제네릭으로 만든 재사용 컴포넌트
 3. `components/ui/SavingsForm.tsx` - 프레젠테이션 컴포넌트 (props 기반)
 4. `SavingsCalculatorPage.tsx` - React Hook Form + Suspense 통합
-5. `hooks/useSavingsProducts.ts` - React Query Suspense 모드
+5. `hooks/useSavingsProducts/useSavingsProducts.ts` - React Query Suspense 모드
 
 </details>
 
